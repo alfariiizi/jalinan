@@ -1,11 +1,8 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import {
-  getServerSession,
-  type DefaultSession,
-  type NextAuthOptions,
-} from "next-auth";
-import { type Adapter } from "next-auth/adapters";
-import DiscordProvider from "next-auth/providers/discord";
+import NextAuth, { type DefaultSession } from "next-auth";
+import Google from "next-auth/providers/google";
+import Credentials from "next-auth/providers/credentials";
+import bcrypt from "bcryptjs";
 
 import { env } from "@/env";
 import { db } from "@/server/db";
@@ -31,42 +28,132 @@ declare module "next-auth" {
   // }
 }
 
-/**
- * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
- *
- * @see https://next-auth.js.org/configuration/options
- */
-export const authOptions: NextAuthOptions = {
-  callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  adapter: PrismaAdapter(db),
+  providers: [
+    Google,
+    Credentials({
+      name: "Credentials",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        // Add logic to verify credentials here
+        if (!credentials) return null;
+        const { email, password } = credentials as {
+          email: string;
+          password: string;
+        };
+        const user = await db.user.findUnique({
+          where: {
+            email,
+          },
+        });
+
+        // Fetch user and password hash from your database
+        // Example: const user = await getUserByEmail(email)
+        if (user && bcrypt.compareSync(password, user.passwordHash)) {
+          // return { id: user.id, name: user.name, email: user.email };
+          return { id: user.id, name: user.name, email: user.email };
+        } else {
+          throw new Error("Invalid credentials");
+        }
       },
     }),
-  },
-  adapter: PrismaAdapter(db) as Adapter,
-  providers: [
-    DiscordProvider({
-      clientId: env.DISCORD_CLIENT_ID,
-      clientSecret: env.DISCORD_CLIENT_SECRET,
-    }),
-    /**
-     * ...add more providers here.
-     *
-     * Most other providers require a bit more work than the Discord provider. For example, the
-     * GitHub provider requires you to add the `refresh_token_expires_in` field to the Account
-     * model. Refer to the NextAuth.js docs for the provider you want to use. Example:
-     *
-     * @see https://next-auth.js.org/providers/github
-     */
   ],
-};
+  session: {
+    strategy: "database",
+  },
+  callbacks: {
+    session: ({ session, user }) => {
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id: user.id,
+        },
+      };
+    },
+  },
+  pages: {
+    signIn: "/login",
+  },
+  debug: env.NODE_ENV === "development",
+});
 
-/**
- * Wrapper for `getServerSession` so that you don't need to import the `authOptions` in every file.
- *
- * @see https://next-auth.js.org/configuration/nextjs
- */
-export const getServerAuthSession = () => getServerSession(authOptions);
+// --> this is for Lucia <--
+
+// import { PrismaAdapter } from "@lucia-auth/adapter-prisma";
+// import { Lucia, type User, type Session } from "lucia";
+// import { db } from "./db";
+// import { cache } from "react";
+// import { cookies } from "next/headers";
+//
+// const adapter = new PrismaAdapter(db.session, db.user); // your adapter
+//
+// export const lucia = new Lucia(adapter, {
+//   sessionCookie: {
+//     // this sets cookies with super long expiration
+//     // since Next.js doesn't allow Lucia to extend cookie expiration when rendering pages
+//     expires: false,
+//     attributes: {
+//       // set to `true` when using HTTPS
+//       secure: process.env.NODE_ENV === "production",
+//     },
+//   },
+//   getUserAttributes(databaseUserAttributes) {
+//     return {
+//       id: databaseUserAttributes.id,
+//       username: databaseUserAttributes.username,
+//       displayName: databaseUserAttributes.displayName,
+//       avatarUrl: databaseUserAttributes.avatarUrl,
+//       googleId: databaseUserAttributes.googleId,
+//     };
+//   },
+// });
+//
+// // IMPORTANT!
+// declare module "lucia" {
+//   interface Register {
+//     Lucia: typeof lucia;
+//     DatabaseUserAttributes: DatabaseUserAttributes;
+//   }
+// }
+//
+// interface DatabaseUserAttributes {
+//   id: string;
+//   username: string;
+//   displayName: string;
+//   avatarUrl: string | null;
+//   googleId: string | null;
+// }
+//
+// export const validateRequest = cache(
+//   async (): Promise<
+//     { user: User; session: Session } | { user: null; session: null }
+//   > => {
+//     const sessionId = cookies().get(lucia.sessionCookieName)?.value ?? null;
+//     if (!sessionId) {
+//       return {
+//         user: null,
+//         session: null,
+//       };
+//     }
+//
+//     const result = await lucia.validateSession(sessionId);
+//
+//     try {
+//       if (result.session && result.session.fresh) {
+//         const sessionCookie = lucia.createSessionCookie(result.session.id);
+//         cookies().set(
+//           sessionCookie.name,
+//           sessionCookie.value,
+//           sessionCookie.attributes,
+//         );
+//       }
+//     } catch (error) {}
+//
+//     return result;
+//   },
+// );

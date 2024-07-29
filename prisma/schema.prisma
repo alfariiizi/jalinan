@@ -14,18 +14,6 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    createdBy   User   @relation(fields: [createdById], references: [id])
-    createdById String
-
-    @@index([name])
-}
-
 // Necessary for Next auth
 model Account {
     id                       String  @id @default(cuid())
@@ -44,6 +32,7 @@ model Account {
     refresh_token_expires_in Int?
 
     @@unique([provider, providerAccountId])
+    @@map("accounts")
 }
 
 model Session {
@@ -52,17 +41,24 @@ model Session {
     userId       String
     expires      DateTime
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@map("sessions")
 }
 
 model User {
     id            String    @id @default(cuid())
     name          String?
+    username      String    @unique
     email         String?   @unique
     emailVerified DateTime?
-    image         String?
+    passwordHash  String
+    gogleId       String?   @unique
+    avatarUrl     String?
+    bio           String?
     accounts      Account[]
     sessions      Session[]
-    posts         Post[]
+
+    @@map("users")
 }
 
 model VerificationToken {
@@ -71,4 +67,5 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+    @@map("verification_tokens")
 }
