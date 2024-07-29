@@ -1,6 +1,5 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import NextAuth, { type DefaultSession } from "next-auth";
-import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 
@@ -22,56 +21,82 @@ declare module "next-auth" {
     } & DefaultSession["user"];
   }
 
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
+  interface User {
+    id?: string;
+    // ...other properties
+    // role: UserRole;
+  }
+
+  interface JWT {
+    id: string;
+  }
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(db),
   providers: [
-    Google,
+    // Google,
     Credentials({
       name: "Credentials",
       credentials: {
-        email: { label: "Email", type: "email" },
+        email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        // Add logic to verify credentials here
         if (!credentials) return null;
         const { email, password } = credentials as {
           email: string;
           password: string;
         };
-        const user = await db.user.findUnique({
-          where: {
-            email,
-          },
-        });
+        try {
+          const user = await db.user.findUnique({
+            where: {
+              ...(email.includes("@")
+                ? {
+                    email,
+                  }
+                : {
+                    username: email,
+                  }),
+            },
+          });
 
-        // Fetch user and password hash from your database
-        // Example: const user = await getUserByEmail(email)
-        if (user && bcrypt.compareSync(password, user.passwordHash)) {
-          // return { id: user.id, name: user.name, email: user.email };
-          return { id: user.id, name: user.name, email: user.email };
-        } else {
-          throw new Error("Invalid credentials");
+          // Fetch user and password hash from your database
+          // Example: const user = await getUserByEmail(email)
+          if (user && bcrypt.compareSync(password, user.passwordHash)) {
+            return { id: user.id, name: user.name, email: user.email };
+          } else {
+            // throw new Error("Invalid credentials");
+            return null;
+          }
+        } catch (error) {
+          return null;
         }
       },
     }),
   ],
   session: {
-    strategy: "database",
+    strategy: "jwt",
+    maxAge: 3 * 24 * 60 * 60,
   },
   callbacks: {
-    session: ({ session, user }) => {
+    signIn: ({ user }) => {
+      if (user) return true;
+      return false;
+    },
+    jwt: ({ token, user }) => {
+      return {
+        ...token,
+        ...user,
+      };
+    },
+    session: ({ session, token }) => {
       return {
         ...session,
         user: {
           ...session.user,
-          id: user.id,
+          id: token.sub,
+          name: token.name,
         },
       };
     },
@@ -79,7 +104,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   pages: {
     signIn: "/login",
   },
-  debug: env.NODE_ENV === "development",
+  // debug: env.NODE_ENV === "development",
 });
 
 // --> this is for Lucia <--
