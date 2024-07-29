@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { CardContent, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
 import { api } from "@/trpc/react";
 import { useForm } from "react-hook-form";

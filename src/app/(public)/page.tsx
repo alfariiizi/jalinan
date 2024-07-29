@@ -82,9 +82,10 @@ export default async function Home() {
                 </div>
               </div>
               <p className="mt-4 text-muted-foreground">
-                "I've been using this platform for a year now and it's been a
-                game-changer for my business. The connections I've made and the
-                insights I've gained have been invaluable."
+                &quot;I&apos;ve been using this platform for a year now and
+                it&apos;s been a game-changer for my business. The connections
+                I&apos;ve made and the insights I&apos;ve gained have been
+                invaluable.&quot;
               </p>
             </div>
             <div className="rounded-lg bg-background p-6 shadow">
@@ -100,9 +101,10 @@ export default async function Home() {
                 </div>
               </div>
               <p className="mt-4 text-muted-foreground">
-                "This platform has helped me connect with like-minded
-                individuals and discover new opportunities. It's been a valuable
-                resource for both my personal and professional growth."
+                &quot;This platform has helped me connect with like-minded
+                individuals and discover new opportunities. It&apos;s been a
+                valuable resource for both my personal and professional
+                growth.&quot;
               </p>
             </div>
             <div className="rounded-lg bg-background p-6 shadow">
@@ -118,9 +120,10 @@ export default async function Home() {
                 </div>
               </div>
               <p className="mt-4 text-muted-foreground">
-                "I've been using this platform to showcase my work and connect
-                with potential clients. The exposure and networking
-                opportunities have been invaluable for my freelance business."
+                &quot;I&apos;ve been using this platform to showcase my work and
+                connect with potential clients. The exposure and networking
+                opportunities have been invaluable for my freelance
+                business.&quot;
               </p>
             </div>
           </div>

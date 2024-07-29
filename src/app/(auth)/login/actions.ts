@@ -3,7 +3,6 @@
 import { loginSchema } from "@/validation";
 import { signIn } from "@/server/auth";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 
 export async function login(prevState: unknown, formData: FormData) {
   const result = loginSchema.safeParse(Object.fromEntries(formData.entries()));

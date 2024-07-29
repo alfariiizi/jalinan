@@ -17,7 +17,9 @@
   "dependencies": {
     "@auth/prisma-adapter": "^1.6.0",
     "@hookform/resolvers": "^3.9.0",
+    "@libsql/client": "^0.7.0",
     "@lucia-auth/adapter-prisma": "^4.0.1",
+    "@prisma/adapter-libsql": "^5.17.0",
     "@prisma/client": "^5.14.0",
     "@radix-ui/react-checkbox": "^1.1.1",
     "@radix-ui/react-label": "^2.1.0",
@@ -28,7 +30,6 @@
     "@trpc/client": "^11.0.0-rc.446",
     "@trpc/react-query": "^11.0.0-rc.446",
     "@trpc/server": "^11.0.0-rc.446",
-    "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
@@ -49,7 +50,6 @@
     "zod": "^3.23.3"
   },
   "devDependencies": {
-    "@types/bcrypt": "^5.0.2",
     "@types/bcryptjs": "^2.4.6",
     "@types/eslint": "^8.56.10",
     "@types/node": "^20.14.10",
@@ -68,5 +68,6 @@
   },
   "ct3aMetadata": {
     "initVersion": "7.36.2"
-  }
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }
