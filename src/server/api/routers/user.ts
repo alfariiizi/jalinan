@@ -6,7 +6,6 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "@/server/api/trpc";
-import { signIn } from "@/server/auth";
 
 export const userRouter = createTRPCRouter({
   getuser: protectedProcedure.query(async ({ ctx }) => {
@@ -17,20 +16,6 @@ export const userRouter = createTRPCRouter({
     });
     return user;
   }),
-  loginUser: publicProcedure
-    .input(
-      z.object({
-        username: z.string(),
-        password: z.string(),
-      }),
-    )
-    .mutation(async ({ input, ctx }) => {
-      await signIn("credentials", {
-        email: input.username,
-        password: input.password,
-        redirect: false,
-      });
-    }),
   createUser: publicProcedure
     .input(
       z.object({
