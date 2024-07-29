@@ -63,12 +63,12 @@ export default function Form() {
             {...register("password")}
           />
         </div>
-        <div className="grid grid-cols-1 gap-4">
-          <Button variant="outline">
-            <FcGoogle className="mx-2 size-5" />
-            Login with Google
-          </Button>
-        </div>
+        {/* <div className="grid grid-cols-1 gap-4"> */}
+        {/*   <Button variant="outline"> */}
+        {/*     <FcGoogle className="mx-2 size-5" /> */}
+        {/*     Login with Google */}
+        {/*   </Button> */}
+        {/* </div> */}
       </CardContent>
       <CardFooter className="flex justify-between">
         <Link
