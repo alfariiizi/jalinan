@@ -13,7 +13,7 @@ const adapter = new PrismaLibSQL(libsql);
 
 const createPrismaClient = () =>
   new PrismaClient({
-    adapter: env.NODE_ENV === "production" ? adapter : null,
+    adapter,
     log:
       env.NODE_ENV === "development" ? ["query", "error", "warn"] : ["error"],
   });

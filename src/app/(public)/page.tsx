@@ -10,7 +10,7 @@ export default async function Home() {
       <section className="relative h-[70vh] w-full bg-[url('/images/hero-image.jpg')] bg-cover bg-center">
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/50 px-4 text-white md:px-6">
           <h1 className="text-center text-4xl font-bold tracking-tight md:text-6xl">
-            Jejalin <br /> Connect with the world
+            Jalinan <br /> Connect with the world
           </h1>
           <p className="mt-4 max-w-[600px] text-center text-lg md:text-xl">
             Discover new people, share your thoughts, and build meaningful
@@ -149,10 +149,10 @@ export default async function Home() {
             </div>
             <div className="flex flex-col items-start space-y-4">
               <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm">
-                Why Jejalin?
+                Why Jalinan?
               </div>
               <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl/relaxed">
-                Jejalin is the premier platform for building meaningful
+                Jalinan is the premier platform for building meaningful
                 connections, sharing your passions, and unlocking new
                 opportunities. Join our vibrant community and take your social
                 presence to new heights.
