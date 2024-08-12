@@ -16,7 +16,7 @@ export default async function layout({ children }: Props) {
         className="mw-center flex gap-10"
       >
         <LeftSidebar />
-        <div className="w-full max-w-[80ch] py-5">{children}</div>
+        <div className="w-full max-w-[60ch] py-5">{children}</div>
         <RightSidebar />
       </div>
     </div>
