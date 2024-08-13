@@ -8,7 +8,7 @@ export default function RightSidebar() {
   return (
     <aside
       style={{ height: `calc(100dvh - ${navbarHeight} - 1px)` }}
-      className="sticky left-0 top-[60px] flex w-[30%] flex-col gap-10 py-5"
+      className="sticky left-0 top-[60px] hidden w-[30%] flex-col gap-10 py-5 md:flex"
     >
       <Whotofollow />
       <Trendingtopics />

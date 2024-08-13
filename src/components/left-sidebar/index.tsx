@@ -14,7 +14,7 @@ export default function LeftSidebar() {
   return (
     <aside
       style={{ height: `calc(100dvh - ${navbarHeight} - 1px)` }}
-      className="sticky left-0 top-[60px] flex w-[22%] flex-col gap-4 py-5"
+      className="sticky left-0 top-[60px] hidden w-[22%] flex-col gap-4 py-5 md:flex"
     >
       {/* Top */}
       <div className="flex flex-col gap-4">

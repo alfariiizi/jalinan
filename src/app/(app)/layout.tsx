@@ -1,5 +1,5 @@
 import LeftSidebar from "@/components/left-sidebar";
-import Navbar from "@/components/navbar";
+import Navbar, { MobileNavbar } from "@/components/navbar";
 import { navbarHeight } from "@/components/navbar/shared";
 import RightSidebar from "@/components/right-sidebar";
 
@@ -18,6 +18,7 @@ export default async function layout({ children }: Props) {
         <LeftSidebar />
         <div className="w-full max-w-[60ch] py-5">{children}</div>
         <RightSidebar />
+        <MobileNavbar />
       </div>
     </div>
   );

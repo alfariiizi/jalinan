@@ -8,6 +8,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { auth } from "@/server/auth";
 import { buttonVariants } from "../ui/button";
+import { dataMobileSidebar } from "./data";
 
 export default function Navbar() {
   return (
@@ -19,7 +20,7 @@ export default function Navbar() {
     >
       <div className="mw-center flex items-center justify-between gap-10">
         <div className="flex w-full items-center gap-32">
-          <Link href="/" className="w-fit">
+          <Link href="/" className="flex w-fit items-center gap-1">
             <Image
               src={AppLogo.src}
               alt="App Logo"
@@ -27,10 +28,11 @@ export default function Navbar() {
               height={AppLogo.height}
               placeholder="blur"
               blurDataURL={AppLogo.blurDataURL}
-              className="h-9 w-36"
+              className="aspect-square w-12"
             />
+            <p className="text-2xl font-semibold text-[#E5575A]">Jalinan</p>
           </Link>
-          <div className="relative w-full">
+          <div className="relative hidden w-full md:block">
             <Input
               type="search"
               className="w-[60%] pl-8"
@@ -63,5 +65,19 @@ async function AvatarAccount() {
       <AvatarImage src="https://github.com/shadcn.png" />
       <AvatarFallback>CN</AvatarFallback>
     </Avatar>
+  );
+}
+
+export function MobileNavbar() {
+  return (
+    <div className="fixed bottom-0 left-0 z-[100] flex h-[72px] w-full items-center justify-center border-t border-gray-300 bg-background/60 px-8 py-2 backdrop-blur-md md:hidden">
+      <menu className="flex w-full items-center justify-between gap-3">
+        {dataMobileSidebar.map(({ label, href, Icon }) => (
+          <Link key={label} href={href}>
+            <Icon />
+          </Link>
+        ))}
+      </menu>
+    </div>
   );
 }
