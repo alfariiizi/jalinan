@@ -38,7 +38,7 @@ export default function Post({
         <div className="">
           <div className="flex items-center gap-2">
             <p className="text-lg font-semibold">{name}</p>
-            <p className="text-sm text-gray-700">{username}</p>
+            <p className="text-sm text-gray-700">@{username}</p>
           </div>
           <p className="text-xs text-gray-800">{dateToDiffString(dateInput)}</p>
         </div>
