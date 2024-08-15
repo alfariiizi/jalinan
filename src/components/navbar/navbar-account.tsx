@@ -11,6 +11,7 @@ import { CgProfile } from "react-icons/cg";
 import LogoutButton from "./logout-button";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { api } from "@/trpc/server";
 
 export async function NavbarAccount() {
   const session = await auth();
@@ -28,6 +29,8 @@ export async function NavbarAccount() {
     );
   }
 
+  const user = await api.user.getuser();
+
   return (
     <Menubar className="h-auto border-0 px-0 py-0">
       <MenubarMenu>
@@ -39,9 +42,7 @@ export async function NavbarAccount() {
           })}
         >
           <CgProfile className="size-7 rounded-full text-gray-600" />
-          <p className="text-sm font-medium text-[#222222]">
-            {session.user.email}
-          </p>
+          <p className="text-sm font-medium text-[#222222]">{user.name}</p>
         </MenubarTrigger>
         <MenubarContent className="z-[150]">
           {/* <MenubarItem asChild> */}

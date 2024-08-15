@@ -33,7 +33,7 @@ export default function Form() {
           if (typeof res === "boolean") {
             if (res) {
               toast.success("Successfully login!");
-              router.push("/");
+              router.push("/gate");
             } else {
               toast.error("Failed to login into your account!");
             }

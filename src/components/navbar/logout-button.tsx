@@ -9,6 +9,8 @@ export default function LogoutButton() {
   const router = useRouter();
   return (
     <Button
+      variant="destructive"
+      className="h-full w-full"
       onClick={async () => {
         const res = await logout();
         if (res) {

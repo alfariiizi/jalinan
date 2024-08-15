@@ -15,14 +15,16 @@ import { useRouter } from "next/navigation";
 export default function Form() {
   const router = useRouter();
   const createUser = api.user.createUser.useMutation({
-    onSuccess() {
-      toast.success("Successfully create your account!");
-      router.push("/login");
-    },
-    onError() {
-      toast.error("Failed to create your account!");
+    onSuccess(data) {
+      if (data?.message) {
+        toast.error(data.message);
+      } else {
+        toast.success("Successfully create your account!");
+        router.push("/login");
+      }
     },
   });
+
   const {
     register,
     handleSubmit,
@@ -36,7 +38,6 @@ export default function Form() {
         e.preventDefault();
         await handleSubmit(async (data) => {
           await createUser.mutateAsync({
-            username: data.username,
             email: data.email,
             password: data.password,
           });
@@ -44,16 +45,6 @@ export default function Form() {
       }}
     >
       <CardContent className="space-y-4">
-        <div className="grid gap-2">
-          <Label htmlFor="username">Username</Label>
-          <Input
-            id="username"
-            placeholder="wick_babayaga01"
-            required
-            {...register("username")}
-          />
-          <p className="text-destructive">{errors.username?.message}</p>
-        </div>
         <div className="grid gap-2">
           <Label htmlFor="email">Email</Label>
           <Input

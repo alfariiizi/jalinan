@@ -19,6 +19,7 @@ export async function login(prevState: unknown, formData: FormData) {
       password: data.password,
     });
     revalidatePath("/");
+    revalidatePath("/gate");
     return true;
   } catch (error) {
     return false;
