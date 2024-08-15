@@ -1,9 +1,10 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
+// ref: https://github.com/codinginflow/nextjs-15-social-media-app/blob/Final-Project/prisma/schema.prisma
 
 generator client {
     provider        = "prisma-client-js"
-    previewFeatures = ["driverAdapters"]
+    previewFeatures = ["driverAdapters", "fullTextSearch"]
 }
 
 datasource db {
@@ -47,17 +48,27 @@ model Session {
 }
 
 model User {
-    id            String    @id @default(cuid())
-    name          String?
-    username      String    @unique
-    email         String?   @unique
-    emailVerified DateTime?
-    passwordHash  String
-    gogleId       String?   @unique
-    avatarUrl     String?
-    bio           String?
-    accounts      Account[]
-    sessions      Session[]
+    id                    String         @id @default(cuid())
+    name                  String?
+    username              String         @unique
+    email                 String?        @unique
+    emailVerified         DateTime?
+    passwordHash          String
+    gogleId               String?        @unique
+    avatarUrl             String?
+    bio                   String?
+    accounts              Account[]
+    sessions              Session[]
+    posts                 Post[]
+    following             Follow[]       @relation("Following")
+    followers             Follow[]       @relation("Followers")
+    likes                 Like[]
+    bookmarks             Bookmark[]
+    comments              Comment[]
+    receivedNotifications Notification[] @relation("Recipient")
+    issuedNotifications   Notification[] @relation("Issuer")
+
+    createdAt DateTime @default(now())
 
     @@map("users")
 }
@@ -69,4 +80,94 @@ model VerificationToken {
 
     @@unique([identifier, token])
     @@map("verification_tokens")
+}
+
+model Follow {
+    followerId  String
+    follower    User   @relation("Following", fields: [followerId], references: [id], onDelete: Cascade)
+    followingId String
+    following   User   @relation("Followers", fields: [followingId], references: [id], onDelete: Cascade)
+
+    @@unique([followerId, followingId])
+    @@map("follows")
+}
+
+model Post {
+    id                  String         @id @default(cuid())
+    content             String
+    userId              String
+    user                User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+    attachments         Media[]
+    likes               Like[]
+    bookmarks           Bookmark[]
+    comments            Comment[]
+    linkedNotifications Notification[]
+
+    createdAt DateTime @default(now())
+
+    @@map("posts")
+}
+
+model Media {
+    id     String  @id @default(cuid())
+    postId String?
+    post   Post?   @relation(fields: [postId], references: [id], onDelete: SetNull)
+    type   String // IMAGE | VIDEO
+    url    String
+
+    createdAt DateTime @default(now())
+
+    @@map("post_media")
+}
+
+model Comment {
+    id      String @id @default(cuid())
+    content String
+    userId  String
+    user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    postId  String
+    post    Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+    createdAt DateTime @default(now())
+
+    @@map("comments")
+}
+
+model Like {
+    userId String
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    postId String
+    post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+    @@unique([userId, postId])
+    @@map("likes")
+}
+
+model Bookmark {
+    id     String @id @default(cuid())
+    userId String
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    postId String
+    post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+    createdAt DateTime @default(now())
+
+    @@unique([userId, postId])
+    @@map("bookmarks")
+}
+
+model Notification {
+    id          String  @id @default(cuid())
+    recipientId String
+    recipient   User    @relation("Recipient", fields: [recipientId], references: [id], onDelete: Cascade)
+    issuerId    String
+    issuer      User    @relation("Issuer", fields: [issuerId], references: [id], onDelete: Cascade)
+    postId      String?
+    post        Post?   @relation(fields: [postId], references: [id], onDelete: Cascade)
+    type        String // LIKE | FOLLOW | COMMENT
+    read        Boolean @default(false)
+
+    createdAt DateTime @default(now())
+
+    @@map("notifications")
 }
