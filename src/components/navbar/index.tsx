@@ -3,13 +3,12 @@ import { Input } from "../ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { navbarHeight } from "./shared";
 import { LuSearch } from "react-icons/lu";
-import AppLogo from "@public/images/app-logo.png";
-import Image from "next/image";
 import Link from "next/link";
 import { auth } from "@/server/auth";
 import { buttonVariants } from "../ui/button";
 import { dataMobileSidebar } from "./data";
 import { NavbarAccount } from "./navbar-account";
+import { AppLogo } from "../app-logo";
 
 export default function Navbar() {
   return (
@@ -22,16 +21,7 @@ export default function Navbar() {
       <div className="mw-center flex items-center justify-between gap-10">
         <div className="flex w-full items-center gap-32">
           <Link href="/" className="flex w-fit items-center gap-1">
-            <Image
-              src={AppLogo.src}
-              alt="App Logo"
-              width={AppLogo.width}
-              height={AppLogo.height}
-              placeholder="blur"
-              blurDataURL={AppLogo.blurDataURL}
-              className="aspect-square w-12"
-            />
-            <p className="text-2xl font-semibold text-[#E5575A]">Jalinan</p>
+            <AppLogo />
           </Link>
           <div className="relative hidden w-full md:block">
             <Input

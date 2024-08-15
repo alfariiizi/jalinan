@@ -48,7 +48,7 @@ export default function Form() {
           <Label htmlFor="username">Username</Label>
           <Input
             id="username"
-            placeholder="johndoe11"
+            placeholder="wick_babayaga01"
             required
             {...register("username")}
           />
@@ -59,7 +59,7 @@ export default function Form() {
           <Input
             id="email"
             type="email"
-            placeholder="m@example.com"
+            placeholder="wick@email.com"
             required
             {...register("email")}
           />
