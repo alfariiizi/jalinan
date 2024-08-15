@@ -13,7 +13,7 @@ export default async function layout({ children }: Props) {
         style={{
           minHeight: `calc(100dvh - ${navbarHeight} - 1px)`,
         }}
-        className="mw-center flex gap-10"
+        className="mw-center-smallpad flex gap-10"
       >
         <LeftSidebar />
         <div className="w-full max-w-[60ch] py-5">{children}</div>

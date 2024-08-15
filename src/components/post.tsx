@@ -3,6 +3,7 @@ import Image from "next/image";
 import { LuHeart, LuMessageCircle } from "react-icons/lu";
 import { Input } from "./ui/input";
 import { dateToDiffString, formatNumber } from "@/lib/utils";
+import { Card } from "./ui/card";
 
 type Props = {
   imgSrc?: string;
@@ -26,7 +27,7 @@ export default function Post({
   const dateInput = typeof date === "string" ? new Date(date) : date;
 
   return (
-    <div className="flex w-full flex-col gap-4 rounded-lg bg-background px-6 py-5">
+    <Card className="flex flex-col">
       <div className="flex gap-3">
         <Image
           src={imgSrc ?? "/images/placeholder-user.png"}
@@ -64,8 +65,11 @@ export default function Post({
             {commentAmount ? formatNumber(commentAmount) : 0}
           </p>
         </div>
-        <Input placeholder="Write your comment" className="rounded-full" />
+        <Input
+          placeholder="Write your comment"
+          className="h-fit rounded-full text-sm"
+        />
       </div>
-    </div>
+    </Card>
   );
 }
