@@ -1,7 +1,15 @@
 import { LuBell } from "react-icons/lu";
 import NotificationItem from "./_components/NotificationItem";
+import { auth } from "@/server/auth";
+import { redirect } from "next/navigation";
 
-export default function page() {
+export default async function page() {
+  const session = await auth();
+
+  if (!session) {
+    redirect("/login");
+  }
+
   return (
     <div className="space-y-3">
       <div className="card card-row justify-center text-xl">

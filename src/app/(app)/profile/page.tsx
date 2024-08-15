@@ -1,8 +1,16 @@
 import Post from "@/components/post";
 import { Button } from "@/components/ui/button";
+import { auth } from "@/server/auth";
+import { redirect } from "next/navigation";
 import Image from "next/image";
 
-export default function page() {
+export default async function page() {
+  const session = await auth();
+
+  if (!session) {
+    redirect("/login");
+  }
+
   return (
     <div className="flex w-full flex-col gap-10">
       <div className="flex flex-col gap-3 rounded-lg bg-background px-6 py-5">
