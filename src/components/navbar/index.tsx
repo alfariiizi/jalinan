@@ -9,6 +9,7 @@ import Link from "next/link";
 import { auth } from "@/server/auth";
 import { buttonVariants } from "../ui/button";
 import { dataMobileSidebar } from "./data";
+import { NavbarAccount } from "./navbar-account";
 
 export default function Navbar() {
   return (
@@ -42,7 +43,7 @@ export default function Navbar() {
           </div>
         </div>
         <div className="">
-          <AvatarAccount />
+          <NavbarAccount />
         </div>
       </div>
     </nav>
