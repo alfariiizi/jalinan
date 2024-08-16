@@ -1,11 +1,8 @@
 import React from "react";
 import { Input } from "../ui/input";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { navbarHeight } from "./shared";
 import { LuSearch } from "react-icons/lu";
 import Link from "next/link";
-import { auth } from "@/server/auth";
-import { buttonVariants } from "../ui/button";
 import { dataMobileSidebar } from "./data";
 import { NavbarAccount } from "./navbar-account";
 import { AppLogo } from "../app-logo";
@@ -40,24 +37,24 @@ export default function Navbar() {
   );
 }
 
-async function AvatarAccount() {
-  const session = await auth();
-
-  if (!session) {
-    return (
-      <Link href="/login" className={buttonVariants({ variant: "default" })}>
-        Login
-      </Link>
-    );
-  }
-
-  return (
-    <Avatar>
-      <AvatarImage src="https://github.com/shadcn.png" />
-      <AvatarFallback>CN</AvatarFallback>
-    </Avatar>
-  );
-}
+// async function AvatarAccount() {
+//   const session = await auth();
+//
+//   if (!session) {
+//     return (
+//       <Link href="/login" className={buttonVariants({ variant: "default" })}>
+//         Login
+//       </Link>
+//     );
+//   }
+//
+//   return (
+//     <Avatar>
+//       <AvatarImage src="https://github.com/shadcn.png" />
+//       <AvatarFallback>CN</AvatarFallback>
+//     </Avatar>
+//   );
+// }
 
 export function MobileNavbar() {
   return (

@@ -1,6 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { DateDiff } from "./DateDiff";
+import { format } from "date-fns";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -13,18 +14,20 @@ export function dateToDiffString(date: Date) {
     return val === 1 ? `${val} ${singular}` : `${val} ${singular}s`;
   }
 
-  if (dateDiff.years() > 0) {
-    return messages(dateDiff.years(), "year");
-  } else if (dateDiff.months() > 0) {
-    return messages(dateDiff.months(), "month");
-  } else if (dateDiff.days() > 0) {
-    return messages(dateDiff.days(), "day");
+  if (dateDiff.days() > 0) {
+    if (dateDiff.days() === 1) {
+      return "Yesterday";
+    } else if (dateDiff.days() > 3) {
+      return messages(dateDiff.days(), "day") + " ago";
+    } else {
+      return format(date, "MMMM d, y");
+    }
   } else if (dateDiff.hours() > 0) {
-    return messages(dateDiff.hours(), "hour");
+    return messages(dateDiff.hours(), "hour") + " ago";
   } else if (dateDiff.minutes() > 0) {
-    return messages(dateDiff.minutes(), "minute");
+    return messages(dateDiff.minutes(), "minute") + " ago";
   } else {
-    return messages(dateDiff.seconds(), "second");
+    return messages(dateDiff.seconds(), "second") + " ago";
   }
 }
 

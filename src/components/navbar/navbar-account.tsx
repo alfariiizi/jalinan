@@ -29,7 +29,7 @@ export async function NavbarAccount() {
     );
   }
 
-  const user = await api.user.getuser();
+  const user = await api.user.getUser();
 
   return (
     <Menubar className="h-auto border-0 px-0 py-0">

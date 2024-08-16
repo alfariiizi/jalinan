@@ -4,9 +4,17 @@ import { LuHeart, LuMessageCircle } from "react-icons/lu";
 import { Input } from "./ui/input";
 import { dateToDiffString, formatNumber } from "@/lib/utils";
 import { Card } from "./ui/card";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 type Props = {
-  imgSrc?: string;
+  avatarImgSrc?: string | null;
+  attachmentImgSrc?: string | string[];
   name: string;
   username: string;
   date: Date | string;
@@ -16,7 +24,8 @@ type Props = {
 };
 
 export default function Post({
-  imgSrc,
+  avatarImgSrc,
+  attachmentImgSrc,
   name,
   username,
   date,
@@ -27,10 +36,10 @@ export default function Post({
   const dateInput = typeof date === "string" ? new Date(date) : date;
 
   return (
-    <Card className="flex flex-col">
+    <Card className="flex flex-col gap-4">
       <div className="flex gap-3">
         <Image
-          src={imgSrc ?? "/images/placeholder-user.png"}
+          src={avatarImgSrc ?? "/images/placeholder-user.png"}
           alt="placeholder"
           width={50}
           height={50}
@@ -45,13 +54,36 @@ export default function Post({
         </div>
       </div>
       <p className="text-sm leading-[1.4rem] text-gray-800">{messages}</p>
-      <Image
-        src={"/images/placeholder.webp"}
-        alt="placeholder"
-        width={1000}
-        height={700}
-        className="max-h-[300px] w-full max-w-full object-contain"
-      />
+      {attachmentImgSrc && typeof attachmentImgSrc === "string" && (
+        <Image
+          src={attachmentImgSrc}
+          alt={`${name}-${username}-${attachmentImgSrc}`}
+          width={1000}
+          height={700}
+          className="max-h-[300px] w-full max-w-full object-contain"
+        />
+      )}
+      {attachmentImgSrc &&
+        typeof attachmentImgSrc !== "string" &&
+        attachmentImgSrc.length !== 0 && (
+          <Carousel>
+            <CarouselContent>
+              {attachmentImgSrc.map((img) => (
+                <CarouselItem key={img}>
+                  <Image
+                    src={img}
+                    alt={`${name}-${username}-${img}`}
+                    width={1000}
+                    height={700}
+                    className="max-h-[300px] w-full max-w-full object-contain"
+                  />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious />
+            <CarouselNext />
+          </Carousel>
+        )}
       <div className="flex items-center gap-5">
         <div className="flex items-center gap-1">
           <LuHeart className="size-5 stroke-rose-500" />

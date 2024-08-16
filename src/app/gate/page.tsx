@@ -11,7 +11,7 @@ export default async function page() {
     redirect("/login");
   }
 
-  const user = await api.user.getuser();
+  const user = await api.user.getUser();
 
   if (user?.username !== user?.email?.split("@").join("-")) {
     return <Preparing />;

@@ -11,7 +11,7 @@ type Props = { children: React.ReactNode };
 export default async function layout({ children }: Props) {
   const session = await auth();
   if (session) {
-    const user = await api.user.getuser();
+    const user = await api.user.getUser();
     if (user?.username === user?.email?.split("@").join("-")) {
       redirect("/on-boarding");
     }

@@ -1,6 +1,7 @@
 import React from "react";
 import { Toaster } from "react-hot-toast";
 import { TRPCReactProvider } from "@/trpc/react";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 type Props = {
   children: React.ReactNode;
@@ -9,7 +10,10 @@ type Props = {
 export default function Providers({ children }: Props) {
   return (
     <div>
-      <TRPCReactProvider>{children}</TRPCReactProvider>
+      <TRPCReactProvider>
+        {children}
+        <ReactQueryDevtools />
+      </TRPCReactProvider>
       <Toaster
         position="bottom-right"
         toastOptions={{
