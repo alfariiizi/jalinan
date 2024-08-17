@@ -53,7 +53,9 @@ export default function Post({
           <p className="text-xs text-gray-800">{dateToDiffString(dateInput)}</p>
         </div>
       </div>
-      <p className="text-sm leading-[1.4rem] text-gray-800">{messages}</p>
+      <pre className="max-w-full text-wrap font-sans text-sm leading-[1.4rem] text-gray-800">
+        {messages}
+      </pre>
       {attachmentImgSrc && typeof attachmentImgSrc === "string" && (
         <Image
           src={attachmentImgSrc}
