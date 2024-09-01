@@ -12,6 +12,7 @@ export function Posts() {
   return posts.map((post) => (
     <Post
       key={post.id}
+      postId={post.id}
       avatarImgSrc={post.user.avatarUrl}
       username={post.user.username}
       name={post.user.name}

@@ -1,4 +1,5 @@
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { z } from "zod";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
 export const postRouter = createTRPCRouter({
   getAllPosts: publicProcedure.query(async ({ ctx }) => {
@@ -69,4 +70,80 @@ export const postRouter = createTRPCRouter({
       a.createdAt < b.createdAt ? 1 : -1,
     );
   }),
+
+  getIsLike: protectedProcedure
+    .input(
+      z.object({
+        postId: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const like = await ctx.db.like.findUnique({
+        where: {
+          userId_postId: {
+            postId: input.postId,
+            userId: ctx.userId,
+          },
+        },
+      });
+      return like ? true : false;
+    }),
+
+  getLikesAmount: publicProcedure
+    .input(
+      z.object({
+        postId: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const likesAmount = await ctx.db.post.findUnique({
+        where: {
+          id: input.postId,
+        },
+        select: {
+          likes: true,
+        },
+      });
+      return likesAmount!.likes.length;
+    }),
+
+  updateLikes: protectedProcedure
+    .input(
+      z.object({
+        postId: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const alreadyLike = await ctx.db.like.findUnique({
+          where: {
+            userId_postId: {
+              postId: input.postId,
+              userId: ctx.userId,
+            },
+          },
+        });
+        if (alreadyLike) {
+          await ctx.db.like.delete({
+            where: {
+              userId_postId: {
+                postId: input.postId,
+                userId: ctx.userId,
+              },
+            },
+          });
+        } else {
+          await ctx.db.like.create({
+            data: {
+              postId: input.postId,
+              userId: ctx.userId,
+            },
+          });
+        }
+      } catch (error) {
+        return {
+          message: "Failed to like the post!",
+        };
+      }
+    }),
 });

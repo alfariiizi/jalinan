@@ -1,9 +1,9 @@
 import React from "react";
 import Image from "next/image";
-import { LuHeart, LuMessageCircle } from "react-icons/lu";
-import { Input } from "./ui/input";
+import { LuMessageCircle } from "react-icons/lu";
+import { Input } from "../ui/input";
 import { dateToDiffString, formatNumber } from "@/lib/utils";
-import { Card } from "./ui/card";
+import { Card } from "../ui/card";
 import {
   Carousel,
   CarouselContent,
@@ -11,8 +11,10 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import ButtonLike from "./button-like";
 
 type Props = {
+  postId: string;
   avatarImgSrc?: string | null;
   attachmentImgSrc?: string | string[];
   name: string;
@@ -24,6 +26,7 @@ type Props = {
 };
 
 export default function Post({
+  postId,
   avatarImgSrc,
   attachmentImgSrc,
   name,
@@ -87,12 +90,7 @@ export default function Post({
           </Carousel>
         )}
       <div className="flex items-center gap-5">
-        <div className="flex items-center gap-1">
-          <LuHeart className="size-5 stroke-rose-500" />
-          <p className="text-sm text-gray-700">
-            {likesAmount ? formatNumber(likesAmount) : 0}
-          </p>
-        </div>
+        <ButtonLike postId={postId} />
         <div className="flex items-center gap-1">
           <LuMessageCircle className="size-5 stroke-blue-700" />
           <p className="text-sm text-gray-700">
