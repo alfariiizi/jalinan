@@ -104,7 +104,7 @@ async function Posts() {
       name={post.user.name}
       date={post.createdAt}
       messages={post.content}
-      likesAmount={post.likes.length}
+      // likesAmount={post.likes.length}
       commentAmount={post.comments.length}
       attachmentImgSrc={post.attachments.map((attach) => attach.url)}
     />

@@ -21,7 +21,6 @@ type Props = {
   username: string;
   date: Date | string;
   messages?: string;
-  likesAmount?: number;
   commentAmount?: number;
 };
 
@@ -33,7 +32,6 @@ export default function Post({
   username,
   date,
   messages,
-  likesAmount,
   commentAmount,
 }: Props) {
   const dateInput = typeof date === "string" ? new Date(date) : date;

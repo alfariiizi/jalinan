@@ -1,4 +1,52 @@
 -- CreateTable
+CREATE TABLE "accounts" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "userId" TEXT NOT NULL,
+    "type" TEXT NOT NULL,
+    "provider" TEXT NOT NULL,
+    "providerAccountId" TEXT NOT NULL,
+    "refresh_token" TEXT,
+    "access_token" TEXT,
+    "expires_at" INTEGER,
+    "token_type" TEXT,
+    "scope" TEXT,
+    "id_token" TEXT,
+    "session_state" TEXT,
+    "refresh_token_expires_in" INTEGER,
+    CONSTRAINT "accounts_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "sessions" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "sessionToken" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "expires" DATETIME NOT NULL,
+    CONSTRAINT "sessions_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "users" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "name" TEXT NOT NULL,
+    "username" TEXT NOT NULL,
+    "email" TEXT,
+    "emailVerified" DATETIME,
+    "passwordHash" TEXT NOT NULL,
+    "gogleId" TEXT,
+    "avatarUrl" TEXT,
+    "bio" TEXT,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- CreateTable
+CREATE TABLE "verification_tokens" (
+    "identifier" TEXT NOT NULL,
+    "token" TEXT NOT NULL,
+    "expires" DATETIME NOT NULL
+);
+
+-- CreateTable
 CREATE TABLE "follows" (
     "followerId" TEXT NOT NULL,
     "followingId" TEXT NOT NULL,
@@ -68,29 +116,26 @@ CREATE TABLE "notifications" (
     CONSTRAINT "notifications_postId_fkey" FOREIGN KEY ("postId") REFERENCES "posts" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- RedefineTables
-PRAGMA defer_foreign_keys=ON;
-PRAGMA foreign_keys=OFF;
-CREATE TABLE "new_users" (
-    "id" TEXT NOT NULL PRIMARY KEY,
-    "name" TEXT,
-    "username" TEXT NOT NULL,
-    "email" TEXT,
-    "emailVerified" DATETIME,
-    "passwordHash" TEXT NOT NULL,
-    "gogleId" TEXT,
-    "avatarUrl" TEXT,
-    "bio" TEXT,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-INSERT INTO "new_users" ("avatarUrl", "bio", "email", "emailVerified", "gogleId", "id", "name", "passwordHash", "username") SELECT "avatarUrl", "bio", "email", "emailVerified", "gogleId", "id", "name", "passwordHash", "username" FROM "users";
-DROP TABLE "users";
-ALTER TABLE "new_users" RENAME TO "users";
+-- CreateIndex
+CREATE UNIQUE INDEX "accounts_provider_providerAccountId_key" ON "accounts"("provider", "providerAccountId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "sessions_sessionToken_key" ON "sessions"("sessionToken");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "users_username_key" ON "users"("username");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "users_gogleId_key" ON "users"("gogleId");
-PRAGMA foreign_keys=ON;
-PRAGMA defer_foreign_keys=OFF;
+
+-- CreateIndex
+CREATE UNIQUE INDEX "verification_tokens_token_key" ON "verification_tokens"("token");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "verification_tokens_identifier_token_key" ON "verification_tokens"("identifier", "token");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "follows_followerId_followingId_key" ON "follows"("followerId", "followingId");
