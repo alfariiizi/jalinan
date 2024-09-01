@@ -10,16 +10,16 @@ import SuperJSON from "superjson";
 import { type AppRouter } from "@/server/api/root";
 import { createQueryClient } from "./query-client";
 import { useRouter } from "next/navigation";
-import { type AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 let clientQueryClientSingleton: QueryClient | undefined = undefined;
-const getQueryClient = (router: AppRouterInstance) => {
+const getQueryClient = (unauthorizedCallback: (() => void) | undefined) => {
   if (typeof window === "undefined") {
     // Server: always make a new query client
-    return createQueryClient(router);
+    return createQueryClient(unauthorizedCallback);
   }
   // Browser: use singleton pattern to keep the same query client
-  return (clientQueryClientSingleton ??= createQueryClient(router));
+  return (clientQueryClientSingleton ??=
+    createQueryClient(unauthorizedCallback));
 };
 
 export const api = createTRPCReact<AppRouter>();
@@ -40,7 +40,10 @@ export type RouterOutputs = inferRouterOutputs<AppRouter>;
 
 export function TRPCReactProvider(props: { children: React.ReactNode }) {
   const router = useRouter();
-  const queryClient = getQueryClient(router);
+  const queryClient = getQueryClient(() => {
+    router.push("/login");
+    router.refresh();
+  });
 
   const [trpcClient] = useState(() =>
     api.createClient({

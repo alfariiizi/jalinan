@@ -4,11 +4,13 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 import { type TRPCError } from "@trpc/server";
-import { type AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import toast from "react-hot-toast";
 import SuperJSON from "superjson";
 
-export const createQueryClient = (router: AppRouterInstance) =>
+export const createQueryClient = (
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  unauthorizedCallback: (() => void) | undefined = () => {},
+) =>
   new QueryClient({
     mutationCache: new MutationCache({
       async onError(error) {
@@ -18,8 +20,7 @@ export const createQueryClient = (router: AppRouterInstance) =>
         const code = err.code;
         if (code === "UNAUTHORIZED") {
           toast.error("Please login to your account!");
-          router.push("/login");
-          router.refresh();
+          unauthorizedCallback();
         }
       },
     }),
