@@ -71,18 +71,22 @@ export const postRouter = createTRPCRouter({
     );
   }),
 
-  getIsLike: protectedProcedure
+  getIsLike: publicProcedure
     .input(
       z.object({
         postId: z.string(),
       }),
     )
     .query(async ({ ctx, input }) => {
+      if (!ctx.session) {
+        return false;
+      }
+
       const like = await ctx.db.like.findUnique({
         where: {
           userId_postId: {
             postId: input.postId,
-            userId: ctx.userId,
+            userId: ctx.session.user.id,
           },
         },
       });

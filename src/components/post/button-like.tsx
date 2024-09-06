@@ -11,35 +11,47 @@ type Props = {
 
 export default function ButtonLike({ postId }: Props) {
   const utils = api.useUtils();
-  const isLike = api.post.getIsLike.useQuery({ postId });
-  const likesAmount = api.post.getLikesAmount.useQuery({ postId });
+  const [isLike] = api.post.getIsLike.useSuspenseQuery({ postId });
+  const [likesAmount] = api.post.getLikesAmount.useSuspenseQuery({ postId });
+
   const mutation = api.post.updateLikes.useMutation({
-    async onSuccess() {
-      await utils.post.getIsLike.invalidate();
+    async onSuccess(_, { postId }) {
+      await utils.post.getIsLike.invalidate({ postId });
+      await utils.post.getLikesAmount.invalidate({ postId });
     },
-    async onMutate(variables) {
-      await utils.post.getLikesAmount.cancel();
-      const prevousData = utils.post.getLikesAmount.getData({
-        postId: variables.postId,
+    async onMutate({ postId }) {
+      await utils.post.getIsLike.cancel({ postId });
+      await utils.post.getLikesAmount.cancel({ postId });
+
+      // const previousLikesAmount = utils.post.getLikesAmount.getData({
+      //   postId,
+      // });
+      // const previousIsLike = utils.post.getIsLike.getData({
+      //   postId,
+      // });
+
+      utils.post.getLikesAmount.setData({ postId: postId }, (oldData) => {
+        return oldData ?? 0 + 1;
       });
-      utils.post.getLikesAmount.setData(
-        { postId: variables.postId },
-        (oldData) => {
-          return oldData ?? 0 + 1;
-        },
-      );
       return {
-        prevousData,
+        previousIsLike: isLike,
+        previousLikesAmount: likesAmount,
       };
     },
     onError(_, variables, context) {
+      utils.post.getIsLike.setQueriesData(
+        { postId: variables.postId },
+        {},
+        context?.previousIsLike,
+      );
       utils.post.getLikesAmount.setQueriesData(
         { postId: variables.postId },
         {},
-        context?.prevousData,
+        context?.previousLikesAmount,
       );
     },
     async onSettled(_data, _error, variables) {
+      await utils.post.getIsLike.invalidate({ postId: variables.postId });
       await utils.post.getLikesAmount.invalidate({ postId: variables.postId });
     },
   });
@@ -52,15 +64,10 @@ export default function ButtonLike({ postId }: Props) {
         }}
       >
         <LuHeart
-          className={cn(
-            "size-5 stroke-rose-500",
-            isLike.data && "fill-rose-500",
-          )}
+          className={cn("size-5 stroke-rose-500", isLike && "fill-rose-500")}
         />
       </button>
-      <p className="text-sm text-gray-700">
-        {formatNumber(likesAmount.data ?? 0)}
-      </p>
+      <p className="text-sm text-gray-700">{formatNumber(likesAmount)}</p>
     </div>
   );
 }

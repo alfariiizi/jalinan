@@ -1,4 +1,4 @@
-import { api } from "@/trpc/server";
+import { api, HydrateClient } from "@/trpc/server";
 import CreatePost from "./_components/create-post";
 import { Posts } from "./_components/posts";
 
@@ -30,5 +30,9 @@ export default async function page() {
 async function HydratePosts() {
   await api.post.getAllPosts.prefetch();
 
-  return <Posts />;
+  return (
+    <HydrateClient>
+      <Posts />
+    </HydrateClient>
+  );
 }
