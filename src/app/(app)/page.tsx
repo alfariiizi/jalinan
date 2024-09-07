@@ -1,7 +1,5 @@
-import PostSkeleton from "@/components/post/post-skeleton";
 import CreatePost from "./_components/create-post";
 import { Posts } from "./_components/posts";
-import { Suspense } from "react";
 
 export const revalidate = 600; // 10 minutes
 

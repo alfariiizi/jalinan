@@ -4,18 +4,17 @@ import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 export const postRouter = createTRPCRouter({
   getAllPosts: publicProcedure
     .input(
-      z.object({
-        limit: z
-          .number()
-          .min(1)
-          .max(100)
-          .nullish()
-          .transform((val) => val ?? 50),
-        cursor: z.string().nullish(), // <-- "cursor" needs to exist, but can be any type
-      }),
+      z
+        .object({
+          limit: z.number().min(1).max(100).nullish(),
+          cursor: z.string().nullish(), // <-- "cursor" needs to exist, but can be any type
+        })
+        .optional(),
     )
     .query(async ({ ctx, input }) => {
-      const { limit, cursor } = input;
+      const defaultLimit = 10;
+      const limit = input?.limit ?? defaultLimit;
+      const cursor = input?.cursor;
 
       // if (!ctx.session) {
       const posts = await ctx.db.post.findMany({

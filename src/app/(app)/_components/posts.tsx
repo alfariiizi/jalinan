@@ -19,11 +19,10 @@ export function Posts() {
     fetchNextPage,
     hasNextPage,
   } = api.post.getAllPosts.useInfiniteQuery(
-    {
-      limit: 5,
-    },
+    {},
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
+      // initialData: { pages: [{}] },
       // initialCursor: 1, // <-- optional you can pass an initialCursor
     },
   );
