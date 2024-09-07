@@ -2,9 +2,25 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
 export const postRouter = createTRPCRouter({
-  getAllPosts: publicProcedure.query(async ({ ctx }) => {
-    if (!ctx.session) {
+  getAllPosts: publicProcedure
+    .input(
+      z.object({
+        limit: z
+          .number()
+          .min(1)
+          .max(100)
+          .nullish()
+          .transform((val) => val ?? 50),
+        cursor: z.string().nullish(), // <-- "cursor" needs to exist, but can be any type
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const { limit, cursor } = input;
+
+      // if (!ctx.session) {
       const posts = await ctx.db.post.findMany({
+        take: limit + 1, // get an extra item at the end which we'll use as next cursor
+        cursor: cursor ? { id: cursor } : undefined,
         orderBy: {
           createdAt: "desc",
         },
@@ -15,61 +31,73 @@ export const postRouter = createTRPCRouter({
           attachments: true,
         },
       });
-      return posts;
-    }
 
-    const posts = await ctx.db.user.findMany({
-      where: {
-        id: ctx.session.user.id,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-      select: {
-        posts: {
-          include: {
-            user: true,
-            likes: true,
-            comments: true,
-            attachments: true,
-          },
-          orderBy: {
-            createdAt: "desc",
-          },
-        },
-        following: {
-          select: {
-            following: {
-              select: {
-                posts: {
-                  include: {
-                    user: true,
-                    likes: true,
-                    comments: true,
-                    attachments: true,
-                  },
-                  orderBy: {
-                    createdAt: "desc",
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-    });
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (posts.length > limit) {
+        const nextItem = posts.pop();
+        nextCursor = nextItem!.id;
+      }
 
-    const userPosts = posts.map((item) => item.posts).flat();
-    const transformedPosts = posts
-      .map((item) => item.following)
-      .flat()
-      .map((item) => item.following)
-      .map((item) => item.posts)
-      .flat();
-    return [...userPosts, ...transformedPosts].sort((a, b) =>
-      a.createdAt < b.createdAt ? 1 : -1,
-    );
-  }),
+      return {
+        posts,
+        nextCursor,
+      };
+
+      // return posts;
+      // }
+
+      // const posts = await ctx.db.user.findMany({
+      //   // where: {
+      //   //   id: ctx.session.user.id,
+      //   // },
+      //   orderBy: {
+      //     createdAt: "desc",
+      //   },
+      //   select: {
+      //     posts: {
+      //       include: {
+      //         user: true,
+      //         likes: true,
+      //         comments: true,
+      //         attachments: true,
+      //       },
+      //       orderBy: {
+      //         createdAt: "desc",
+      //       },
+      //     },
+      //     following: {
+      //       select: {
+      //         following: {
+      //           select: {
+      //             posts: {
+      //               include: {
+      //                 user: true,
+      //                 likes: true,
+      //                 comments: true,
+      //                 attachments: true,
+      //               },
+      //               orderBy: {
+      //                 createdAt: "desc",
+      //               },
+      //             },
+      //           },
+      //         },
+      //       },
+      //     },
+      //   },
+      // });
+
+      // const userPosts = posts.map((item) => item.posts).flat();
+      // const transformedPosts = posts
+      //   .map((item) => item.following)
+      //   .flat()
+      //   .map((item) => item.following)
+      //   .map((item) => item.posts)
+      //   .flat();
+      // return [...userPosts, ...transformedPosts].sort((a, b) =>
+      //   a.createdAt < b.createdAt ? 1 : -1,
+      // );
+    }),
 
   getIsLike: publicProcedure
     .input(

@@ -1,4 +1,3 @@
-import React from "react";
 import Image from "next/image";
 import { LuMessageCircle } from "react-icons/lu";
 import { Input } from "../ui/input";

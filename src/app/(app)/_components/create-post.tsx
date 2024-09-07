@@ -6,19 +6,33 @@ import { api } from "@/trpc/react";
 import Image from "next/image";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { LuImage } from "react-icons/lu";
 
 export default function CreatePost() {
   const [content, setContent] = useState("");
+  const utils = api.useUtils();
+
   const mutation = api.user.createPost.useMutation({
-    onSuccess(data) {
+    async onSuccess(data) {
       if (data.success) {
         toast.success(data.message);
+        await utils.post.getAllPosts.invalidate();
         setContent("");
       } else {
         toast.error(data.message);
       }
     },
+    // NOTE: Read your neovim notes for more details about why I comment this
+    //
+    // async onMutate() {
+    //   await utils.post.getAllPosts.cancel()
+    //   const limit = 3
+    //   const previousPosts = utils.post.getAllPosts.getData({limit})
+    //   utils.post.getAllPosts.setData({limit}, (oldData) => {
+    //     return {
+    //       [...oldData?.posts]
+    //     }
+    //   })
+    // }
   });
 
   return (
@@ -47,7 +61,7 @@ export default function CreatePost() {
         />
       </div>
       <div className="flex items-center gap-3 self-end text-gray-600">
-        <LuImage className="size-8" />
+        {/* <LuImage className="size-8" /> */}
         <Button isLoading={mutation.isPending} className="w-fit px-6">
           Post
         </Button>

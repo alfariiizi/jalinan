@@ -11,6 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { login } from "../actions";
+import { api } from "@/trpc/react";
 
 export default function Form() {
   const router = useRouter();
@@ -19,6 +20,7 @@ export default function Form() {
     handleSubmit,
     formState: { isSubmitting },
   } = useForm<LoginValues>({ resolver: zodResolver(loginSchema) });
+  const utils = api.useUtils();
 
   return (
     <form
@@ -33,6 +35,7 @@ export default function Form() {
           if (typeof res === "boolean") {
             if (res) {
               toast.success("Successfully login!");
+              await utils.invalidate();
               router.push("/gate");
             } else {
               toast.error("Failed to login into your account!");

@@ -48,12 +48,13 @@ function Trendingtopics() {
     <div className="space-y-2">
       <h2 className="text-lg font-semibold">Trending topics</h2>
       <div className="flex flex-col gap-3 rounded-lg bg-white px-4 py-3">
-        {tags.map((tag) => (
-          <Link href={`/tags/${tag.name}`} key={tag.name} className="">
-            <p className="text-sm font-semibold">#{tag.name}</p>
-            <p className="text-xs text-gray-700">{tag.value} posts</p>
-          </Link>
-        ))}
+        <p>Coming soon</p>
+        {/* {tags.map((tag) => ( */}
+        {/*   <Link href={`/tags/${tag.name}`} key={tag.name} className=""> */}
+        {/*     <p className="text-sm font-semibold">#{tag.name}</p> */}
+        {/*     <p className="text-xs text-gray-700">{tag.value} posts</p> */}
+        {/*   </Link> */}
+        {/* ))} */}
       </div>
     </div>
   );

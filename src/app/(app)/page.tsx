@@ -1,14 +1,15 @@
-import { api, HydrateClient } from "@/trpc/server";
+import PostSkeleton from "@/components/post/post-skeleton";
 import CreatePost from "./_components/create-post";
 import { Posts } from "./_components/posts";
+import { Suspense } from "react";
 
-export const revalidate = 10; // 10 minutes
+export const revalidate = 600; // 10 minutes
 
 export default async function page() {
   return (
     <div className="flex w-full flex-col gap-7">
       <CreatePost />
-      <HydratePosts />
+      <Posts />
       {/* { */}
       {/*   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
       {/*   [...new Array(8)].fill(0).map((_, index) => ( */}
@@ -27,12 +28,12 @@ export default async function page() {
   );
 }
 
-async function HydratePosts() {
-  await api.post.getAllPosts.prefetch();
-
-  return (
-    <HydrateClient>
-      <Posts />
-    </HydrateClient>
-  );
-}
+// async function HydratePosts() {
+//   await api.post.getAllPosts.prefetch();
+//
+//   return (
+//     <HydrateClient>
+//       <Posts />
+//     </HydrateClient>
+//   );
+// }

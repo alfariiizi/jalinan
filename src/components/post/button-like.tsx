@@ -1,9 +1,9 @@
 "use client";
 
-import { cn, formatNumber } from "@/lib/utils";
+import { formatNumber } from "@/lib/utils";
 import { api } from "@/trpc/react";
 import React from "react";
-import { LuHeart } from "react-icons/lu";
+import HeartIcon from "./heart-icon";
 
 type Props = {
   postId: string;
@@ -11,8 +11,6 @@ type Props = {
 
 export default function ButtonLike({ postId }: Props) {
   const utils = api.useUtils();
-  const [isLike] = api.post.getIsLike.useSuspenseQuery({ postId });
-  const [likesAmount] = api.post.getLikesAmount.useSuspenseQuery({ postId });
 
   const mutation = api.post.updateLikes.useMutation({
     async onSuccess(_, { postId }) {
@@ -23,19 +21,19 @@ export default function ButtonLike({ postId }: Props) {
       await utils.post.getIsLike.cancel({ postId });
       await utils.post.getLikesAmount.cancel({ postId });
 
-      // const previousLikesAmount = utils.post.getLikesAmount.getData({
-      //   postId,
-      // });
-      // const previousIsLike = utils.post.getIsLike.getData({
-      //   postId,
-      // });
+      const previousLikesAmount = utils.post.getLikesAmount.getData({
+        postId,
+      });
+      const previousIsLike = utils.post.getIsLike.getData({
+        postId,
+      });
 
       utils.post.getLikesAmount.setData({ postId: postId }, (oldData) => {
         return oldData ?? 0 + 1;
       });
       return {
-        previousIsLike: isLike,
-        previousLikesAmount: likesAmount,
+        previousIsLike,
+        previousLikesAmount,
       };
     },
     onError(_, variables, context) {
@@ -63,11 +61,25 @@ export default function ButtonLike({ postId }: Props) {
           await mutation.mutateAsync({ postId });
         }}
       >
-        <LuHeart
-          className={cn("size-5 stroke-rose-500", isLike && "fill-rose-500")}
-        />
+        <Like postId={postId} />
       </button>
-      <p className="text-sm text-gray-700">{formatNumber(likesAmount)}</p>
+      <LikeAmount postId={postId} />
     </div>
   );
+}
+
+function Like({ postId }: { postId: string }) {
+  const { data: isLike, isLoading } = api.post.getIsLike.useQuery({ postId });
+
+  if (isLoading) {
+    return <HeartIcon />;
+  }
+
+  return <HeartIcon isLike={isLike} />;
+}
+
+function LikeAmount({ postId }: { postId: string }) {
+  const [likesAmount] = api.post.getLikesAmount.useSuspenseQuery({ postId });
+
+  return <p className="text-sm text-gray-700">{formatNumber(likesAmount)}</p>;
 }
