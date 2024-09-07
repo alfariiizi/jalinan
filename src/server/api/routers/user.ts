@@ -141,4 +141,26 @@ export const userRouter = createTRPCRouter({
         };
       }
     }),
+  getWhoToFollow: publicProcedure.query(async ({ ctx }) => {
+    const users = await ctx.db.user.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+      where: {
+        id: ctx.session
+          ? {
+              not: ctx.session.user.id,
+            }
+          : undefined,
+      },
+      take: 3,
+      select: {
+        id: true,
+        name: true,
+        username: true,
+        avatarUrl: true,
+      },
+    });
+    return users;
+  }),
 });
