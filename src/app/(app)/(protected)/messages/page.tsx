@@ -8,5 +8,5 @@ export default async function page() {
     redirect("/login");
   }
 
-  return <div>page</div>;
+  return <div>Coming soon</div>;
 }
