@@ -7,6 +7,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "../ui/button";
 import { usePathname } from "next/navigation";
+import InputSearch from "./input-search";
 
 export default function LeftSidebar() {
   const pathname = usePathname();
@@ -18,6 +19,7 @@ export default function LeftSidebar() {
     >
       {/* Top */}
       <div className="flex flex-col gap-4">
+        <InputSearch />
         {dataLeftSidebar.map(({ href, label, Icon }) => (
           <Link
             key={href}

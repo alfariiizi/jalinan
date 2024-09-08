@@ -19,14 +19,6 @@ export default function Navbar() {
           <Link href="/" className="flex w-fit items-center gap-1">
             <AppLogo />
           </Link>
-          <div className="relative hidden w-full md:block">
-            <Input
-              type="search"
-              className="w-[60%] pl-8"
-              placeholder="Search friends or tags"
-            />
-            <LuSearch className="absolute left-2 top-1/2 -translate-y-1/2 stroke-gray-600 text-lg" />
-          </div>
         </div>
         <div className="">
           <NavbarAccount />
