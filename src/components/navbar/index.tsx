@@ -3,7 +3,6 @@ import { Input } from "../ui/input";
 import { navbarHeight } from "./shared";
 import { LuSearch } from "react-icons/lu";
 import Link from "next/link";
-import { dataMobileSidebar } from "./data";
 import { NavbarAccount } from "./navbar-account";
 import { AppLogo } from "../app-logo";
 
@@ -55,17 +54,3 @@ export default function Navbar() {
 //     </Avatar>
 //   );
 // }
-
-export function MobileNavbar() {
-  return (
-    <div className="fixed bottom-0 left-0 z-[100] flex h-[60px] w-full items-center justify-center border-t border-gray-300 bg-background/60 px-4 py-2 backdrop-blur-md md:hidden">
-      <menu className="flex w-full items-center justify-between gap-3">
-        {dataMobileSidebar.map(({ label, href, Icon }) => (
-          <Link key={label} href={href}>
-            <Icon />
-          </Link>
-        ))}
-      </menu>
-    </div>
-  );
-}

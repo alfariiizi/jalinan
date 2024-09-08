@@ -1,5 +1,6 @@
 import LeftSidebar from "@/components/left-sidebar";
-import Navbar, { MobileNavbar } from "@/components/navbar";
+import Navbar from "@/components/navbar";
+import MobileNavbar from "@/components/navbar/mobile-navbar";
 import { navbarHeight } from "@/components/navbar/shared";
 import RightSidebar from "@/components/right-sidebar";
 import { auth } from "@/server/auth";

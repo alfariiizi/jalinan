@@ -18,26 +18,23 @@ export default function LeftSidebar() {
     >
       {/* Top */}
       <div className="flex flex-col gap-4">
-        {dataLeftSidebar.map(({ href, label, className, Icon }) => (
+        {dataLeftSidebar.map(({ href, label, Icon }) => (
           <Link
             key={href}
             href={href}
             className={cn(
               buttonVariants({
                 variant: "ghost",
-                className: "justify-start gap-2 text-start hover:bg-gray-200",
+                className:
+                  "justify-start gap-2 rounded-r-none text-start hover:bg-gray-200",
               }),
-              href === pathname && {
-                "bg-blue-100": href === "/",
-                "bg-red-100": href === "/notification",
-                "bg-green-100": href === "/messages",
-                "bg-orange-100": href === "/saved",
-                "bg-indigo-100": href === "/profile",
-              },
-              className,
+              href === pathname &&
+                "cursor-default border-r-4 border-r-primary/50 bg-primary/10 font-bold hover:bg-primary/10 hover:font-bold",
             )}
           >
-            <Icon />
+            <Icon
+              className={cn("size-5", href === pathname && "fill-foreground")}
+            />
             {label}
           </Link>
         ))}
