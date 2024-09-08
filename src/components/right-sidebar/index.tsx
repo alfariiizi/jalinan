@@ -1,47 +1,21 @@
 import React from "react";
 import { navbarHeight } from "../navbar/shared";
-import Link from "next/link";
-import { api, HydrateClient } from "@/trpc/server";
 import Whotofollow from "./who-to-follow";
+import { api } from "@/trpc/server";
 
-export default function RightSidebar() {
-  void api.user.getWhoToFollow.prefetch();
+export default async function RightSidebar() {
+  const whoToFollowData = await api.user.getWhoToFollow();
 
   return (
     <aside
       style={{ height: `calc(100dvh - ${navbarHeight} - 1px)` }}
       className="sticky left-0 top-[60px] hidden w-[30%] flex-col gap-10 py-5 md:flex"
     >
-      <HydrateClient>
-        <Whotofollow />
-      </HydrateClient>
+      <Whotofollow initialData={whoToFollowData} />
       <Trendingtopics />
     </aside>
   );
 }
-
-const tags = [
-  {
-    name: "epl",
-    value: 4,
-  },
-  {
-    name: "liverpool",
-    value: 20,
-  },
-  {
-    name: "indonesia",
-    value: 28,
-  },
-  {
-    name: "thewitcher",
-    value: 10,
-  },
-  {
-    name: "marvel",
-    value: 18,
-  },
-];
 
 function Trendingtopics() {
   return (

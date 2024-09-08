@@ -12,3 +12,26 @@ export const accountData = [
     username: "mosalah11",
   },
 ];
+
+export const tags = [
+  {
+    name: "epl",
+    value: 4,
+  },
+  {
+    name: "liverpool",
+    value: 20,
+  },
+  {
+    name: "indonesia",
+    value: 28,
+  },
+  {
+    name: "thewitcher",
+    value: 10,
+  },
+  {
+    name: "marvel",
+    value: 18,
+  },
+];

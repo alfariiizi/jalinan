@@ -2,11 +2,18 @@
 
 import Image from "next/image";
 import { Button } from "../ui/button";
-import { api } from "@/trpc/react";
+import { api, type RouterOutputs } from "@/trpc/react";
 import Link from "next/link";
+import { Skeleton } from "../ui/skeleton";
 
-export default function Whotofollow() {
-  const [accounts] = api.user.getWhoToFollow.useSuspenseQuery();
+type Props = {
+  initialData: RouterOutputs["user"]["getWhoToFollow"];
+};
+
+export default function Whotofollow({ initialData }: Props) {
+  const { data: accounts } = api.user.getWhoToFollow.useQuery(undefined, {
+    initialData,
+  });
 
   return (
     <div className="space-y-2">
@@ -37,10 +44,39 @@ export default function Whotofollow() {
                 </p>
               </div>
             </Link>
-            <Button>Follow</Button>
+            <FollowButton userId={account.id} />
           </div>
         ))}
       </div>
     </div>
+  );
+}
+
+function FollowButton({ userId }: { userId: string }) {
+  const utils = api.useUtils();
+  const { data: isFollow } = api.user.isFollow.useQuery({
+    followUserId: userId,
+  });
+  const mutation = api.user.follow.useMutation({
+    async onSuccess(_, { followUserId }) {
+      await utils.user.getWhoToFollow.invalidate();
+      await utils.user.isFollow.invalidate({ followUserId });
+    },
+  });
+
+  if (typeof isFollow === "undefined") {
+    return <Skeleton className="h-[40px] w-[76px]" />;
+  }
+
+  return (
+    <Button
+      variant={isFollow ? "secondary" : "default"}
+      onClick={async () => {
+        await mutation.mutateAsync({ followUserId: userId });
+      }}
+      isLoading={mutation.isPending}
+    >
+      {isFollow ? "Following" : "Follow"}
+    </Button>
   );
 }

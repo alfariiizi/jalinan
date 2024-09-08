@@ -163,4 +163,60 @@ export const userRouter = createTRPCRouter({
     });
     return users;
   }),
+  isFollow: publicProcedure
+    .input(
+      z.object({
+        followUserId: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      if (!ctx.session) {
+        return false;
+      }
+      const found = await ctx.db.follow.findUnique({
+        where: {
+          followerId_followingId: {
+            followingId: input.followUserId,
+            followerId: ctx.session.user.id,
+          },
+        },
+      });
+      return found ? true : false;
+    }),
+  follow: protectedProcedure
+    .input(
+      z.object({
+        followUserId: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const found = await ctx.db.follow.findUnique({
+        where: {
+          followerId_followingId: {
+            followingId: input.followUserId,
+            followerId: ctx.userId,
+          },
+        },
+      });
+
+      if (found) {
+        await ctx.db.follow.delete({
+          where: {
+            followerId_followingId: {
+              followingId: input.followUserId,
+              followerId: ctx.userId,
+            },
+          },
+        });
+        return { isFollow: false };
+      } else {
+        await ctx.db.follow.create({
+          data: {
+            followerId: ctx.userId,
+            followingId: input.followUserId,
+          },
+        });
+        return { isFollow: true };
+      }
+    }),
 });
