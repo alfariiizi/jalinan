@@ -55,6 +55,7 @@ export default function CreatePost() {
         />
         <Textarea
           value={content}
+          required
           onChange={(e) => setContent(e.target.value)}
           placeholder="What on your mind?"
           className="h-fit"
