@@ -23,6 +23,7 @@ export default function InputSearch() {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         className="w-full rounded-sm border-primary bg-transparent pl-8"
+        required
         placeholder="Search friends or tags"
       />
       <LuSearch className="absolute left-2 top-1/2 -translate-y-1/2 stroke-gray-600 text-lg" />

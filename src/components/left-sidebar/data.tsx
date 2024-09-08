@@ -1,5 +1,4 @@
-import { cn } from "@/lib/utils";
-import { LuBell, LuBookmark, LuHome, LuMail, LuUser } from "react-icons/lu";
+import { LuBookmark, LuHome, LuUser } from "react-icons/lu";
 
 // export const dataLeftSidebar = [
 //   {

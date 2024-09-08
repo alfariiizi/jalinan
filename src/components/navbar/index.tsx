@@ -1,7 +1,5 @@
 import React from "react";
-import { Input } from "../ui/input";
 import { navbarHeight } from "./shared";
-import { LuSearch } from "react-icons/lu";
 import Link from "next/link";
 import { NavbarAccount } from "./navbar-account";
 import { AppLogo } from "../app-logo";

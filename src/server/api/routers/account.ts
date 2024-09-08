@@ -70,4 +70,36 @@ export const accountRouter = createTRPCRouter({
 
       return posts;
     }),
+  getFindUsers: protectedProcedure
+    .input(
+      z.object({
+        search: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const users = await ctx.db.user.findMany({
+        where: {
+          OR: [
+            {
+              username: {
+                contains: input.search,
+              },
+            },
+            {
+              name: {
+                contains: input.search,
+              },
+            },
+          ],
+        },
+        select: {
+          id: true,
+          name: true,
+          username: true,
+          avatarUrl: true,
+        },
+      });
+
+      return users;
+    }),
 });

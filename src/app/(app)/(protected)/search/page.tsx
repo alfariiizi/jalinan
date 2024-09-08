@@ -1,5 +1,12 @@
-import React from "react";
+import { redirect } from "next/navigation";
 
-export default function page() {
-  return <div>Search Page</div>;
+type Props = {
+  searchParams: {
+    search: string;
+  };
+};
+
+export default function page({ searchParams: { search } }: Props) {
+  const searchParams = new URLSearchParams({ search });
+  redirect(`/search/accounts?${searchParams.toString()}`);
 }
