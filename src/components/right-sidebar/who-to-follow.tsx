@@ -61,6 +61,8 @@ function FollowButton({ userId }: { userId: string }) {
     async onSuccess(_, { followUserId }) {
       await utils.user.getWhoToFollow.invalidate();
       await utils.user.isFollow.invalidate({ followUserId });
+      await utils.account.getUserInfo.invalidate({ userId: followUserId });
+      await utils.account.getUserInfo.invalidate({ currentUser: true });
     },
   });
 

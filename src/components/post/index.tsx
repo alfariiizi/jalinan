@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/carousel";
 import ButtonLike from "./button-like";
 
-type Props = {
+export type PostProps = {
   postId: string;
   avatarImgSrc?: string | null;
   attachmentImgSrc?: string | string[];
@@ -32,7 +32,7 @@ export default function Post({
   date,
   messages,
   commentAmount,
-}: Props) {
+}: PostProps) {
   const dateInput = typeof date === "string" ? new Date(date) : date;
 
   return (
