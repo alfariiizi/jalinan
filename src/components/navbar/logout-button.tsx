@@ -5,6 +5,7 @@ import { logout } from "@/app/(app)/actions";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { api } from "@/trpc/react";
+import { LuLogOut } from "react-icons/lu";
 
 export default function LogoutButton() {
   const router = useRouter();
@@ -13,7 +14,7 @@ export default function LogoutButton() {
   return (
     <Button
       variant="destructive"
-      className="h-full w-full"
+      className="h-full w-full gap-2 bg-destructive/20 text-destructive hover:bg-destructive/30"
       onClick={async () => {
         const res = await logout();
         if (res) {
@@ -23,6 +24,7 @@ export default function LogoutButton() {
         }
       }}
     >
+      <LuLogOut className="size-4" />
       Logout
     </Button>
   );

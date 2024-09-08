@@ -44,7 +44,7 @@ export async function NavbarAccount() {
           <CgProfile className="size-7 rounded-full text-gray-600" />
           <p className="text-sm font-medium text-[#222222]">{user.name}</p>
         </MenubarTrigger>
-        <MenubarContent className="z-[150]">
+        <MenubarContent className="z-[150] min-w-fit">
           {/* <MenubarItem asChild> */}
           {/*   <Link */}
           {/*     href="/" */}
