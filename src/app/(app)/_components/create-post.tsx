@@ -16,6 +16,7 @@ export default function CreatePost() {
       if (data.success) {
         toast.success(data.message);
         await utils.post.getAllPosts.invalidate();
+        await utils.tag.getRecentTags.invalidate();
         setContent("");
       } else {
         toast.error(data.message);

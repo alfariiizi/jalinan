@@ -119,7 +119,7 @@ function Posts({ userId }: UserPostsProps) {
   if (posts.length === 0) {
     return (
       <div className="flex items-center justify-center">
-        <p>You have no posts</p>
+        <p>Have no posts</p>
       </div>
     );
   }

@@ -177,4 +177,31 @@ export const postRouter = createTRPCRouter({
         };
       }
     }),
+
+  getPostsFromTag: protectedProcedure
+    .input(
+      z.object({
+        tag: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const posts = await ctx.db.post.findMany({
+        where: {
+          content: {
+            contains: `#${input.tag}`,
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        include: {
+          user: true,
+          likes: true,
+          comments: true,
+          attachments: true,
+        },
+      });
+
+      return posts;
+    }),
 });
