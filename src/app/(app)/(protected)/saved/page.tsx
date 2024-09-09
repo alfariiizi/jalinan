@@ -1,12 +1,12 @@
-import { auth } from "@/server/auth";
-import { redirect } from "next/navigation";
+import { api, HydrateClient } from "@/trpc/server";
+import PageCLient from "./page-client";
 
 export default async function page() {
-  const session = await auth();
+  void api.post.getAllBookmarkedPosts.prefetch();
 
-  if (!session) {
-    redirect("/login");
-  }
-
-  return <div>Coming Soon</div>;
+  return (
+    <HydrateClient>
+      <PageCLient />
+    </HydrateClient>
+  );
 }

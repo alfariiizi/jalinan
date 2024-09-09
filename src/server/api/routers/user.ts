@@ -141,6 +141,53 @@ export const userRouter = createTRPCRouter({
         };
       }
     }),
+  getIsPostSaved: protectedProcedure
+    .input(z.object({ postId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const found = await ctx.db.bookmark.findUnique({
+        where: {
+          userId_postId: {
+            postId: input.postId,
+            userId: ctx.userId,
+          },
+        },
+      });
+      return found ? true : false;
+    }),
+  toggleSavePost: protectedProcedure
+    .input(z.object({ postId: z.string(), isSaved: z.boolean().optional() }))
+    .mutation(async ({ ctx, input }) => {
+      const found =
+        input.isSaved ??
+        (await ctx.db.bookmark.findUnique({
+          where: {
+            userId_postId: {
+              postId: input.postId,
+              userId: ctx.userId,
+            },
+          },
+        }));
+
+      if (!found) {
+        await ctx.db.bookmark.create({
+          data: {
+            postId: input.postId,
+            userId: ctx.userId,
+          },
+        });
+        return true;
+      }
+
+      await ctx.db.bookmark.delete({
+        where: {
+          userId_postId: {
+            postId: input.postId,
+            userId: ctx.userId,
+          },
+        },
+      });
+      return false;
+    }),
   getWhoToFollow: publicProcedure.query(async ({ ctx }) => {
     const users = await ctx.db.user.findMany({
       orderBy: {

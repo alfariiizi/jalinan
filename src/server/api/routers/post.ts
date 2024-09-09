@@ -204,4 +204,29 @@ export const postRouter = createTRPCRouter({
 
       return posts;
     }),
+
+  getAllBookmarkedPosts: protectedProcedure.query(async ({ ctx }) => {
+    const posts = await ctx.db.post.findMany({
+      where: {
+        bookmarks: {
+          some: {
+            userId: {
+              equals: ctx.userId,
+            },
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        user: true,
+        likes: true,
+        comments: true,
+        attachments: true,
+      },
+    });
+
+    return posts;
+  }),
 });

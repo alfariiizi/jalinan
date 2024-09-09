@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/carousel";
 import ButtonLike from "./button-like";
 import { parseHashTagsAndLinks } from "./parseHashTagsAndLinks";
+import Actions from "./actions";
 
 export type PostProps = {
   postId: string;
@@ -38,21 +39,26 @@ export default function Post({
 
   return (
     <Card className="flex flex-col gap-4">
-      <div className="flex gap-3">
-        <Image
-          src={avatarImgSrc ?? "/images/placeholder-user.png"}
-          alt="placeholder"
-          width={50}
-          height={50}
-          className="aspect-square size-[50px] rounded-full"
-        />
-        <div className="">
-          <div className="flex items-center gap-2">
-            <p className="text-lg font-semibold">{name}</p>
-            <p className="text-sm text-gray-700">@{username}</p>
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex gap-3">
+          <Image
+            src={avatarImgSrc ?? "/images/placeholder-user.png"}
+            alt="placeholder"
+            width={50}
+            height={50}
+            className="aspect-square size-[50px] rounded-full"
+          />
+          <div className="">
+            <div className="flex items-center gap-2">
+              <p className="text-lg font-semibold">{name}</p>
+              <p className="text-sm text-gray-700">@{username}</p>
+            </div>
+            <p className="text-xs text-gray-800">
+              {dateToDiffString(dateInput)}
+            </p>
           </div>
-          <p className="text-xs text-gray-800">{dateToDiffString(dateInput)}</p>
         </div>
+        <Actions postId={postId} />
       </div>
       <pre className="max-w-full text-wrap font-sans text-sm leading-[1.4rem] text-gray-800">
         {parseHashTagsAndLinks(messages ?? "")}
