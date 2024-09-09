@@ -11,7 +11,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import ButtonLike from "./button-like";
-import { parseHashTags } from "./parseHashTags";
+import { parseHashTagsAndLinks } from "./parseHashTagsAndLinks";
 
 export type PostProps = {
   postId: string;
@@ -55,7 +55,7 @@ export default function Post({
         </div>
       </div>
       <pre className="max-w-full text-wrap font-sans text-sm leading-[1.4rem] text-gray-800">
-        {parseHashTags(messages ?? "")}
+        {parseHashTagsAndLinks(messages ?? "")}
       </pre>
       {attachmentImgSrc && typeof attachmentImgSrc === "string" && (
         <Image
