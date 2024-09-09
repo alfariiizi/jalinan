@@ -22,7 +22,7 @@ export default function InputSearch() {
         type="search"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="w-full rounded-sm border-primary bg-transparent pl-8"
+        className="w-full rounded-full border-primary bg-transparent pl-8"
         required
         placeholder="Search friends or tags"
       />
