@@ -15,6 +15,7 @@ export default function PageClient() {
   return (
     <UserPage>
       <UserInfo
+        id={user.id}
         currentUser
         username={user.username}
         createdDate={user.createdAt}

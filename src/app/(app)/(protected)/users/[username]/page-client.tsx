@@ -19,7 +19,7 @@ export default function PageClient({ userId }: Props) {
   return (
     <UserPage>
       <UserInfo
-        currentUser
+        id={user.id}
         username={user.username}
         createdDate={user.createdAt}
         name={user.name}

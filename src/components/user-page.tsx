@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/table";
 import { type ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { FollowButtonSuspense } from "./follow-button";
 
 type UserProps = {
   children: ReactNode;
@@ -30,6 +31,7 @@ export function UserPage({ children, className }: UserProps) {
 }
 
 type UserInfoProps = {
+  id: string;
   name: string;
   username: string;
   createdDate: Date | string;
@@ -41,6 +43,7 @@ type UserInfoProps = {
 };
 
 export function UserInfo({
+  id,
   name,
   username,
   createdDate,
@@ -68,7 +71,11 @@ export function UserInfo({
           <h2 className="text-2xl font-semibold">{name}</h2>
           <p className="text-gray-700">@{username}</p>
         </div>
-        {currentUser && <Button variant="outline">Edit Profile</Button>}
+        {currentUser ? (
+          <Button variant="outline">Edit Profile</Button>
+        ) : (
+          <FollowButtonSuspense userId={id} />
+        )}
       </div>
       <div className="flex items-center justify-between gap-8">
         <p className="text-sm text-gray-800">

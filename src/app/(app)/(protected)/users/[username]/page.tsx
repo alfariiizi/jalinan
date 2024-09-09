@@ -11,11 +11,17 @@ type Props = {
 export default async function page({ params: { username } }: Props) {
   const userId = await api.account.getUserId({ username });
   const currentUser = await api.user.getUser();
+
   if (userId === currentUser.id) {
     redirect("/profile");
   }
 
+  if (!userId) {
+    return null;
+  }
+
   void api.account.getUserInfo.prefetch({ userId });
+  void api.user.isFollow.prefetch({ followUserId: userId });
 
   if (!userId) {
     return (
