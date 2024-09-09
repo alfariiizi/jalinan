@@ -4,19 +4,21 @@ import { useRouter } from "next/navigation";
 import { Input } from "../ui/input";
 import { LuSearch } from "react-icons/lu";
 import { useState } from "react";
+import { useSearch } from "@/app/(app)/(protected)/search/_hooks/use-search";
 
 export default function InputSearch() {
   const router = useRouter();
-  const [search, setSearch] = useState("");
+  const [querySearch] = useSearch();
+  const [search, setSearch] = useState(querySearch);
 
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
         const searchParams = new URLSearchParams({ search });
-        router.push(`/search?${searchParams.toString()}`);
+        router.push(`/search/accounts?${searchParams.toString()}`);
       }}
-      className="relative hidden w-full md:block"
+      className="relative w-full"
     >
       <Input
         type="search"
