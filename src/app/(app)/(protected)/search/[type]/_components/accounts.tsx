@@ -10,6 +10,14 @@ export default function Accounts() {
   const [search] = useSearch();
   const [accounts] = api.account.getFindUsers.useSuspenseQuery({ search });
 
+  if (accounts.length === 0) {
+    return (
+      <div className="flex w-full items-center justify-center">
+        <p>No accounts found!</p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-2">
       <div className="space-y-4">

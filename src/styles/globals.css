@@ -89,3 +89,25 @@
     @apply card-col flex-row items-center gap-1;
   }
 }
+
+::-webkit-scrollbar-track {
+  padding: 20px 10px;
+  margin: 0px;
+  background-color: rgba(237, 237, 237, 1);
+  border-radius: 0.25rem;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  margin: 0px;
+  border-radius: 0.25rem;
+  padding: 20px 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  margin: 0px;
+  background-color: #d3d7dd;
+  border-radius: 0.25rem;
+  padding: 20px 10px;
+}
