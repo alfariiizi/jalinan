@@ -98,7 +98,7 @@
 }
 
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
   margin: 0px;
   border-radius: 0.25rem;
   padding: 20px 10px;
@@ -107,7 +107,7 @@
 ::-webkit-scrollbar-thumb {
   border-radius: 10px;
   margin: 0px;
-  background-color: #d3d7dd;
+  background-color: #9ca3af;
   border-radius: 0.25rem;
   padding: 20px 10px;
 }
